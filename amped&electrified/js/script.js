@@ -54,3 +54,92 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const phoneInput = document.getElementById("phone");
+    const contactForm = document.querySelector(".contact-form");
+    const phoneError = document.getElementById("phone-error");
+
+    if (!phoneInput || !contactForm) return;
+
+    function validatePhone() {
+        const phone = phoneInput.value.trim();
+
+        // Accept common South African numbers:
+        // 082 123 4567, 011 123 4567, +27 82 123 4567
+        const phonePattern =
+            /^(?:\+27|0)[\s-]?(?:\(?\d{2}\)?)[\s-]?\d{3}[\s-]?\d{4}$/;
+
+        if (phone === "") {
+            phoneError.textContent = "Please enter your phone number.";
+            phoneInput.setCustomValidity("Phone number is required.");
+            return false;
+        }
+
+        if (!phonePattern.test(phone)) {
+            phoneError.textContent =
+                "Enter a valid South African number, e.g. 082 123 4567.";
+            phoneInput.setCustomValidity("Invalid phone number.");
+            return false;
+        }
+
+        phoneError.textContent = "";
+        phoneInput.setCustomValidity("");
+        return true;
+    }
+
+    phoneInput.addEventListener("blur", validatePhone);
+
+    phoneInput.addEventListener("input", function () {
+        if (phoneInput.value.trim() !== "") {
+            validatePhone();
+        } else {
+            phoneError.textContent = "";
+            phoneInput.setCustomValidity("");
+        }
+    });
+
+    contactForm.addEventListener("submit", function (event) {
+        if (!validatePhone()) {
+            event.preventDefault();
+            phoneInput.reportValidity();
+            phoneInput.focus();
+        }
+    });
+});
+
+ // Back-to-top button.
+    const $backToTop = $("#backToTop");
+    function updateBackToTop() {
+      if ($(window).scrollTop() > 320) {
+        $backToTop.stop(true, true).fadeIn(180);
+      } else {
+        $backToTop.stop(true, true).fadeOut(180);
+      }
+    }
+
+    // Get the button element
+const backToTopBtn = document.getElementById("backToTopBtn");
+
+// When the user scrolls down 300px from the top of the document, show the button
+window.onscroll = function() {
+  scrollFunction();
+};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+    backToTopBtn.style.display = "block";
+  } else {
+    backToTopBtn.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+backToTopBtn.addEventListener("click", function() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth" // Gives it that smooth scrolling effect
+  });
+});
+

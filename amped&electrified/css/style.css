@@ -771,3 +771,37 @@ form {
 #backToTopBtn:hover {
   background-color: #d1c2ae; /* Darker background on hover */
 }
+
+.contact-container {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.contact-column {
+    flex: 1;
+    min-width: 250px;
+}
+
+.map-column {
+    flex: 1.5;
+}
+
+.map-paceholder iframe {
+    width: 100%;
+    height: 300%;
+    border: none;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .contact-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+}
