@@ -9,3 +9,15 @@ updated form HTML and improved it using css
 Site map added
 
 <img width="256" height="130" alt="image" src="https://github.com/user-attachments/assets/5b37f0fe-6844-47fe-ba45-d82083f0b68b" />
+
+Change.Log
+Improving Enquiry Form and making it user friendly and responsive.
+Improving external css and adding more details
+Adding JavaScript(js).
+Linking js on all pages.
+Adding js to website.
+Updating html and css class
+Adding map, inclusive of HTML, CSS and JS
+Adding search bar.
+Adding meta Description.
+Linking google fonts on all pages.
