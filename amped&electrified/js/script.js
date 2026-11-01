@@ -143,3 +143,152 @@ backToTopBtn.addEventListener("click", function() {
   });
 });
 
+function updateBusinessStatus() {
+  const statusElement = document.getElementById('business-status');
+  const now = new Date();
+  
+  const day = now.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+  const hour = now.getHours();
+
+  // Check if Mon-Fri (1 through 5) and between 08:00 and 17:00 (5 PM)
+  if (day >= 1 && day <= 5 && hour >= 8 && hour < 17) {
+    statusElement.textContent = "● Open Now";
+    statusElement.className = "status-badge open";
+  } else {
+    statusElement.textContent = "● Closed Now";
+    statusElement.className = "status-badge closed";
+  }
+}
+
+// Run the script when the page loads
+document.addEventListener('DOMContentLoaded', updateBusinessStatus);
+
+
+$(document).ready(function () {
+
+    // All pages on the website
+    const pages = [
+        "index.html",
+        "about.html",
+        "services.html",
+        "whychooseus.html",
+        "contact.html"
+    ];
+
+    $("#search-form").on("submit", async function (e) {
+
+        e.preventDefault();
+
+        const searchTerm = $("#site-search")
+            .val()
+            .trim()
+            .toLowerCase();
+
+        const results = $("#search-results");
+
+        if (!searchTerm) return;
+
+        results.html("<p>Searching website...</p>");
+
+        let matches = [];
+
+        // Search every HTML page
+        for (const page of pages) {
+
+            try {
+
+                const response = await $.get(page);
+
+                const parser = new DOMParser();
+
+                const doc = parser.parseFromString(
+                    response,
+                    "text/html"
+                );
+
+                // Get the actual page content
+                const content = doc.querySelector("main")
+                    || doc.querySelector("body");
+
+                // Remove elements that should not be searched
+                content.querySelectorAll(
+                    "script, style, nav, header, footer, form"
+                ).forEach(el => el.remove());
+
+                const pageText = content.textContent
+                    .replace(/\s+/g, " ")
+                    .trim();
+
+                // Search actual page text
+                if (pageText.toLowerCase().includes(searchTerm)) {
+
+                    const position = pageText.toLowerCase()
+                        .indexOf(searchTerm);
+
+                    const start = Math.max(0, position - 60);
+
+                    const snippet = pageText.substring(
+                        start,
+                        position + searchTerm.length + 100
+                    );
+
+                    const title = doc.querySelector("title")
+                        ?.textContent || page;
+
+                    matches.push({
+                        title: title,
+                        url: page,
+                        snippet: snippet
+                    });
+
+                }
+
+            } catch (error) {
+
+                console.error("Could not search:", page, error);
+
+            }
+
+        }
+
+        // Display search results
+        results.empty();
+
+        if (matches.length > 0) {
+
+            results.append(
+                $("<h3>").text(
+                    matches.length + " matching page(s) found"
+                )
+            );
+
+            matches.forEach(function (match) {
+
+                const item = $("<div>").addClass("search-result");
+
+                const link = $("<a>")
+                    .attr("href", match.url)
+                    .text(match.title);
+
+                const description = $("<p>")
+                    .text(match.snippet + "...");
+
+                item.append(link, description);
+
+                results.append(item);
+
+            });
+
+        } else {
+
+            results.append(
+                $("<p>").text(
+                    "No matching content found. Try another search term."
+                )
+            );
+
+        }
+
+    });
+
+});
